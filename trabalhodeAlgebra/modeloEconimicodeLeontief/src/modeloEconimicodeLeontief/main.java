@@ -30,16 +30,24 @@ public class main {
 						double[][] matriz = new double[tamanho][tamanho];
 						for (int auxLinha = 0; auxLinha < tamanho; auxLinha++) {
 							for (int auxColuna = 0; auxColuna < tamanho; auxColuna++) {
-								matriz[auxLinha][auxColuna] = in.nextDouble();
+								matriz[auxLinha][auxColuna] = in.nextDouble() * 10;
 							}
 						}
 						if (verificar(matriz)) {
 							double[][] identidade = new double[tamanho][tamanho];
 							for (int i = 0, j = 0; i < tamanho; i++, j++) {
-								identidade[i][j] = 1.0;
+								identidade[i][j] = 10;
 							}
 							matriz = subtrair(matriz, identidade);
 							matriz = escalonar(matriz);
+							matriz = escalonarFinal(matriz);
+							// falta a interpretação dos dados
+
+							for (int i = 0; i < matriz.length; i++) {
+								for (int j = 0; j < matriz.length; j++) {
+									System.out.println(matriz[i][j]);
+								}
+							}
 
 						} else {
 							System.out.println("MATRIZ INVALIDA (SOMA DAS COLUNAS SAO DIFERENTE DE 1) \n");
@@ -56,13 +64,31 @@ public class main {
 			}
 		}
 	}
+	
+	private static double[][] escalonarFinal (double[][] matriz) {
+		for (int i = 1; i < matriz.length; i++) {
+			double[] matrizAux = new double [matriz.length];
+			for (int iI = 0; iI < matriz.length; iI++) {
+				matrizAux[iI] = matriz[i][iI];
+			}
+			for (int i2 = i; i2 < matriz.length; i2++) {
+				double operador = matriz[i-1][i];
+				double numero = matrizAux[i2];
+				matrizAux[i2] = operador * numero;
+			}
+			for (int j = i; j < matriz.length; j++) {
+				matriz[i-1][j] = matriz[i-1][j] - matrizAux[j];
+			}
+		}
+		return matriz;
+	}
 
 	private static double[][] escalonar(double[][] subtrair) {
 		for (int aux = 0; aux < subtrair.length; aux++) {
 			for (int i = 0; i < subtrair.length; i++) {
 				double aux2 = subtrair[i][aux];
 				for (int j = 0; j < subtrair.length; j++) {
-					if (aux <= i) {
+					if (aux <= i && subtrair[i][j] != 0) {
 						subtrair[i][j] = subtrair[i][j] / aux2;
 					}
 				}
@@ -71,25 +97,11 @@ public class main {
 				for (int j = 0; j < subtrair.length; j++) {
 					subtrair[i + 1][j] = subtrair[i + 1][j] - subtrair[aux][j];
 				}
-			}
-			
-			if (aux > 0) {
-				double[] auxEscalonar = new double [subtrair.length];
-				for (int i = 0; i < subtrair.length; i++) {
-					auxEscalonar[i] = subtrair[aux][i];
-				}
-				for (int i = 0; i < subtrair.length; i++) {
-					auxEscalonar[i] = auxEscalonar[i]*subtrair[aux-1][aux];
-				}
-				for (int i = aux; i > 0; i--) {
-					for (int j = aux; j < subtrair.length; j++) {
-						subtrair[i-1][j] = subtrair[i-1][j] - auxEscalonar[j];
-					}
-				}
-			}		
+			}	
 		}
 		return subtrair;
 	}
+
 
 	private static double[][] subtrair(double[][] matriz, double[][] identidade) {
 		double[][] resultado = new double[matriz.length][matriz.length];
@@ -106,7 +118,7 @@ public class main {
 			double soma = 0;
 			for (int auxLinha = 0; auxLinha < matriz.length; auxLinha++) {
 				soma += matriz[auxLinha][auxColuna];
-				if (auxLinha == matriz.length - 1 && soma != 1.0) {
+				if (auxLinha == matriz.length - 1 && soma != 10.0) {
 					return false;
 				}
 			}
