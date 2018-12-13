@@ -41,13 +41,20 @@ public class main {
 							matriz = subtrair(matriz, identidade);
 							matriz = escalonar(matriz);
 							matriz = escalonarFinal(matriz);
-							// falta a interpretação dos dados
-
-							for (int i = 0; i < matriz.length; i++) {
-								for (int j = 0; j < matriz.length; j++) {
-									System.out.println(matriz[i][j]);
+							String resultado = "";
+							for (int i = 0; i < matriz.length;i++) {
+								resultado += "\nSalario "+(i+1)+" : ";
+								for (int j = i+1; j < matriz.length; j++) {
+									if (j == matriz.length -1) {
+										resultado += -1*matriz[i][j];
+									} else {
+										resultado += matriz[i][j];
+									}
+									
 								}
 							}
+							System.out.println(resultado);
+
 
 						} else {
 							System.out.println("MATRIZ INVALIDA (SOMA DAS COLUNAS SAO DIFERENTE DE 1) \n");
@@ -58,6 +65,49 @@ public class main {
 					}
 				}
 			} else if (escolha == 2) {
+				boolean parouAberto = false;
+				while (!parouAberto) {
+					System.out.println("---> 1: INICIAR PROCESSO");
+					System.out.println("---> 0: VOLTAR\n");
+					int escolhaAberto = in.nextInt();
+					if (escolhaAberto == 0) {
+						parouAberto = true;
+					} else if (escolhaAberto == 1) {
+						System.out.println("DIGITE O TAMANHO DA MATRIZ");
+						int tamanho = in.nextInt();
+						System.out.println("DIGITE A MATRIZ E A DEMANDA EXTERNA");
+						double[][] matriz = new double[tamanho][tamanho];
+						for (int auxLinha = 0; auxLinha < tamanho; auxLinha++) {
+							for (int auxColuna = 0; auxColuna < tamanho; auxColuna++) {
+								matriz[auxLinha][auxColuna] = in.nextDouble() * 10;
+							}
+						}
+						double[] demanda = new double[tamanho];
+						double[] produçao = new double[tamanho];
+						for (int aux = 0; aux < tamanho; aux++) {
+							demanda[aux] = in.nextDouble() * 10;
+						}
+						double[][] identidade = new double[tamanho][tamanho];
+						for (int i = 0, j = 0; i < tamanho; i++, j++) {
+							identidade[i][j] = 10;
+						}
+						matriz = subtrair(matriz, identidade);
+						Matrix matrizI = new Matrix(matriz);
+						matrizI = matrizI.inverse();
+
+						for (int auxLinha = 0; auxLinha < tamanho; auxLinha++) {
+							for (int auxColuna = 0; auxColuna < tamanho; auxColuna++) {
+								produçao[auxLinha] += demanda[auxLinha] * matriz[auxLinha][auxColuna];
+							}
+						}
+						for (int aux = 0; aux < tamanho; aux++) {
+							System.out.println(produçao[aux]);
+						}
+
+					} else {
+						System.out.println("NUMERO INVALIDO\n");
+					}
+				}
 
 			} else {
 				System.out.println("NUMERO INVALIDO\n");
