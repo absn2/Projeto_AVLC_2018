@@ -1,0 +1,1 @@
+Repositorio da criação e desenvolvimento do modelo econômico de Leontief, para a cadeira de Álgebra Vetorial Linear para Computação 2018.2.™
